@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import AVFoundation
 
 class ViewController: UIViewController {
 
@@ -20,10 +21,20 @@ class ViewController: UIViewController {
     let DIM_ALPHA:CGFloat = 0.2
     let OPAQUE: CGFloat = 1.0
     let MAX_PENALTIES = 3
+    let FOOD:UInt32 = 1
+    let HEART:UInt32 = 0
     
     var penalties = 0
+    var isMonsterHappy:Bool = false
+    var currentItem:UInt32 = 0
     
     var timer:NSTimer!
+    
+    var musicPlayer:AVAudioPlayer!
+    var sfxBite:AVAudioPlayer!
+    var sfxHeart:AVAudioPlayer!
+    var sfxDeath:AVAudioPlayer!
+    var sfxSkull:AVAudioPlayer!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,12 +47,43 @@ class ViewController: UIViewController {
         skull3Img.alpha = DIM_ALPHA
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "itemDroppedOnCharacter:", name: "onTargetDropped", object: nil)
+        
+        do{
+            try musicPlayer = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("cave-music", ofType: "mp3")!))
+            try sfxBite = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("bite", ofType: "wav")!))
+            try sfxDeath = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("death", ofType: "wav")!))
+            try sfxHeart = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("heart", ofType: "wav")!))
+            try sfxSkull = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("skull", ofType: "wav")!))
+            
+            musicPlayer.prepareToPlay()
+            musicPlayer.play()
+            
+            sfxBite.prepareToPlay()
+            sfxDeath.prepareToPlay()
+            sfxHeart.prepareToPlay()
+            sfxSkull.prepareToPlay()
+
+            
+        } catch let err as NSError {
+            print(err.description)
+        }
 
         startTimmer()
     }
     
     func itemDroppedOnCharacter(notif:AnyObject){
-        print("item dropped on character")
+        isMonsterHappy = true
+        startTimmer()
+        foodImg.alpha = DIM_ALPHA
+        heartImg.alpha = DIM_ALPHA
+        foodImg.userInteractionEnabled = false
+        heartImg.userInteractionEnabled = false
+        
+        if currentItem == FOOD {
+            sfxBite.play()
+        }else {
+            sfxHeart.play()
+        }
     }
     
     func startTimmer(){
@@ -54,29 +96,51 @@ class ViewController: UIViewController {
     }
     
     func changeGameState(){
-        penalties++
-        
-        if penalties == 1 {
-            skull1Img.alpha = OPAQUE
-        }else if penalties == 2 {
-            skull2Img.alpha = OPAQUE
-        }else if penalties >= 3 {
-            skull3Img.alpha = OPAQUE
-        }else {
-            skull1Img.alpha = DIM_ALPHA
-            skull2Img.alpha = DIM_ALPHA
-            skull3Img.alpha = DIM_ALPHA
-        }
-        
-        if penalties == MAX_PENALTIES {
-            gameOver()
-        }
 
+        if !isMonsterHappy {
+            penalties++
+            sfxSkull.play()
+            if penalties == 1 {
+                skull1Img.alpha = OPAQUE
+            }else if penalties == 2 {
+                skull2Img.alpha = OPAQUE
+            }else if penalties >= 3 {
+                skull3Img.alpha = OPAQUE
+            }else {
+                skull1Img.alpha = DIM_ALPHA
+                skull2Img.alpha = DIM_ALPHA
+                skull3Img.alpha = DIM_ALPHA
+            }
+            
+            if penalties == MAX_PENALTIES {
+                gameOver()
+            }
+        }
+        
+       let rand = arc4random_uniform(2)
+        
+        if rand == HEART {
+            foodImg.alpha = DIM_ALPHA
+            foodImg.userInteractionEnabled = false
+            
+            heartImg.alpha = OPAQUE
+            heartImg.userInteractionEnabled = true
+        }else {
+            foodImg.alpha = OPAQUE
+            foodImg.userInteractionEnabled = true
+            
+            heartImg.alpha = DIM_ALPHA
+            heartImg.userInteractionEnabled = false
+        }
+        
+        currentItem = rand
+        isMonsterHappy = false
     }
     
     func gameOver(){
         timer.invalidate()
         monsterImg.playDeathAnimation()
+        sfxDeath.play()
     }
     
 }
