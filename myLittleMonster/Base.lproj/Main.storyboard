@@ -120,11 +120,26 @@
                                     </mask>
                                 </variation>
                             </stackView>
+                            <button hidden="YES" opaque="NO" contentMode="scaleAspectFit" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BIR-ra-fyo">
+                                <rect key="frame" x="212" y="279" width="177" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="1fN-Y3-SHd"/>
+                                    <constraint firstAttribute="width" constant="170" id="Z9c-dm-2ZC"/>
+                                </constraints>
+                                <state key="normal" title="Restart" backgroundImage="ground">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="restartGameButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="u3B-1J-Bce"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="BIR-ra-fyo" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="0Ch-go-Bt1"/>
                             <constraint firstAttribute="trailing" secondItem="19m-fP-Y4I" secondAttribute="trailing" id="3lw-Wf-g1R"/>
                             <constraint firstItem="A5D-XI-TjH" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="3tV-Sd-GED"/>
+                            <constraint firstItem="BIR-ra-fyo" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="8uk-OQ-fVb"/>
                             <constraint firstItem="5ms-GF-0w7" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="BU9-YX-B6R"/>
                             <constraint firstItem="19m-fP-Y4I" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="G7a-lc-D9x"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="19m-fP-Y4I" secondAttribute="bottom" id="GQd-HX-OBy"/>
@@ -174,6 +189,7 @@
                         <outlet property="foodImg" destination="pNo-aV-ao3" id="uyy-b3-Bup"/>
                         <outlet property="heartImg" destination="OZg-aO-JOj" id="HLE-0J-zol"/>
                         <outlet property="monsterImg" destination="DRk-Nr-BTQ" id="Ir6-gb-51f"/>
+                        <outlet property="restartButton" destination="BIR-ra-fyo" id="7zY-bk-KWb"/>
                         <outlet property="skull1Img" destination="LNS-Iy-mMR" id="NOv-QF-MJe"/>
                         <outlet property="skull2Img" destination="tMQ-9p-xhE" id="BKM-bO-qKf"/>
                         <outlet property="skull3Img" destination="hGX-sm-tE0" id="ZOu-IS-75I"/>
@@ -181,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="232" y="387"/>
+            <point key="canvasLocation" x="231" y="387"/>
         </scene>
     </scenes>
     <resources>

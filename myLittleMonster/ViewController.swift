@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var skull1Img: UIImageView!
     @IBOutlet weak var skull2Img: UIImageView!
     @IBOutlet weak var skull3Img: UIImageView!
+    @IBOutlet weak var restartButton: UIButton!
     
     let DIM_ALPHA:CGFloat = 0.2
     let OPAQUE: CGFloat = 1.0
@@ -42,10 +43,6 @@ class ViewController: UIViewController {
         foodImg.dropTarget = monsterImg
         heartImg.dropTarget = monsterImg
         
-        skull1Img.alpha = DIM_ALPHA
-        skull2Img.alpha = DIM_ALPHA
-        skull3Img.alpha = DIM_ALPHA
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "itemDroppedOnCharacter:", name: "onTargetDropped", object: nil)
         
         do{
@@ -56,7 +53,7 @@ class ViewController: UIViewController {
             try sfxSkull = AVAudioPlayer(contentsOfURL: NSURL(fileURLWithPath: NSBundle.mainBundle().pathForResource("skull", ofType: "wav")!))
             
             musicPlayer.prepareToPlay()
-            musicPlayer.play()
+//            musicPlayer.play()
             
             sfxBite.prepareToPlay()
             sfxDeath.prepareToPlay()
@@ -68,7 +65,24 @@ class ViewController: UIViewController {
             print(err.description)
         }
 
+        setupGame()
+       
+    }
+    
+    func setupGame(){
+        monsterImg.playRestartAnimation()
+        NSTimer.scheduledTimerWithTimeInterval(0.9, target: monsterImg, selector: "playIdleAnimation", userInfo: nil, repeats: false)
+        penalties = 0
+        isMonsterHappy = false
+        currentItem = 0
+        restartButton.hidden = true
+        
+        skull1Img.alpha = DIM_ALPHA
+        skull2Img.alpha = DIM_ALPHA
+        skull3Img.alpha = DIM_ALPHA
+        
         startTimmer()
+    
     }
     
     func itemDroppedOnCharacter(notif:AnyObject){
@@ -141,6 +155,11 @@ class ViewController: UIViewController {
         timer.invalidate()
         monsterImg.playDeathAnimation()
         sfxDeath.play()
+        restartButton.hidden = false
+    }
+    @IBAction func restartGameButtonPressed(sender: UIButton) {
+        setupGame()
+        
     }
     
 }
